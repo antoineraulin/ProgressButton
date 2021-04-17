@@ -3,7 +3,6 @@ library progress_button;
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-
 /// A button that animates between state changes.
 /// Progress state is just a small circle with a progress indicator inside
 /// Error state is a vibrating error animation
@@ -11,17 +10,17 @@ import 'package:flutter/widgets.dart';
 class ProgressButton extends StatefulWidget {
   final VoidCallback onPressed;
   final ButtonState buttonState;
-  final Widget child;
-  final Color backgroundColor;
-  final Color progressColor;
+  final Widget? child;
+  final Color? backgroundColor;
+  final Color? progressColor;
 
   ProgressButton(
-      {Key key,
-        @required this.buttonState,
-        @required this.onPressed,
-        this.child,
-        this.backgroundColor,
-        this.progressColor})
+      {Key? key,
+      required this.buttonState,
+      required this.onPressed,
+      this.child,
+      this.backgroundColor,
+      this.progressColor})
       : super(key: key);
 
   @override
@@ -32,19 +31,19 @@ enum ButtonState { inProgress, error, normal }
 
 class _ProgressButtonState extends State<ProgressButton>
     with TickerProviderStateMixin {
-  AnimationController _errorAnimationController;
-  AnimationController _progressAnimationController;
-  Animation<Offset> _errorAnimation;
-  Animation<BorderRadius> _borderAnimation;
-  Animation<double> _widthAnimation;
+  late AnimationController _errorAnimationController;
+  late AnimationController _progressAnimationController;
+  late Animation<Offset> _errorAnimation;
+  late Animation<BorderRadius> _borderAnimation;
+  late Animation<double> _widthAnimation;
 
-  double get buttonWidth => _widthAnimation.value ?? 0;
-  BorderRadius get borderRadius => _borderAnimation.value ?? BorderRadius.circular(12);
+  double get buttonWidth => _widthAnimation.value;
+  BorderRadius get borderRadius => widget.buttonState == ButtonState.inProgress
+      ? _borderAnimation.value
+      : BorderRadius.circular(5);
 
   Color get backgroundColor =>
-      widget.backgroundColor ?? Theme
-          .of(context)
-          .primaryColor;
+      widget.backgroundColor ?? Theme.of(context).primaryColor;
 
   Color get progressColor => widget.progressColor ?? Colors.white;
 
@@ -118,25 +117,23 @@ class _ProgressButtonState extends State<ProgressButton>
         builder: (context, child) {
           return SlideTransition(
               position: _errorAnimation,
-              child: LayoutBuilder(builder: getProgressAnimatedBuilder
-              )
-          );
+              child: LayoutBuilder(builder: getProgressAnimatedBuilder));
         });
   }
 
-  AnimatedBuilder getProgressAnimatedBuilder(BuildContext context, BoxConstraints constraints) {
+  AnimatedBuilder getProgressAnimatedBuilder(
+      BuildContext context, BoxConstraints constraints) {
     var buttonHeight = constraints.maxHeight;
     // If there is no constraint on height, we should constrain it
-    if (buttonHeight == double.infinity) buttonHeight = 48;
+    if (buttonHeight == double.infinity) buttonHeight = 42;
 
     // These animation configurations can be tweaked to have
     // however you like it
     _borderAnimation = BorderRadiusTween(
-        begin: BorderRadius.circular(buttonHeight / 6),
-        end: BorderRadius.circular(buttonHeight / 2))
+            begin: BorderRadius.circular(buttonHeight / 6),
+            end: BorderRadius.circular(buttonHeight / 2))
         .animate(CurvedAnimation(
-        parent: _progressAnimationController,
-        curve: Curves.linear));
+            parent: _progressAnimationController, curve: Curves.linear));
 
     _widthAnimation = Tween<double>(
       begin: constraints.maxWidth,
@@ -146,11 +143,10 @@ class _ProgressButtonState extends State<ProgressButton>
       curve: Curves.linear,
     ));
 
-    Widget buttonContent;
+    late Widget buttonContent;
 
     if (widget.buttonState != ButtonState.inProgress) {
       buttonContent = child;
-
     } else if (widget.buttonState == ButtonState.inProgress) {
       buttonContent = SizedBox(
           height: buttonHeight,
@@ -158,12 +154,10 @@ class _ProgressButtonState extends State<ProgressButton>
           child: Padding(
             padding: EdgeInsets.all(8),
             child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(
-                  progressColor ?? Colors.white),
+              valueColor: AlwaysStoppedAnimation<Color>(progressColor),
               strokeWidth: 3,
             ),
-          )
-      );
+          ));
     }
 
     return AnimatedBuilder(
@@ -178,8 +172,7 @@ class _ProgressButtonState extends State<ProgressButton>
                 width: buttonWidth,
                 height: buttonHeight,
                 decoration: BoxDecoration(
-                    borderRadius: borderRadius,
-                    color: backgroundColor),
+                    borderRadius: borderRadius, color: backgroundColor),
                 child: Center(child: buttonContent),
               ),
             ));
