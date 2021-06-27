@@ -8,7 +8,7 @@ import 'package:flutter/widgets.dart';
 /// Error state is a vibrating error animation
 /// Normal state is the button itself
 class ProgressButton extends StatefulWidget {
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final ButtonState buttonState;
   final Widget? child;
   final Color? backgroundColor;
@@ -17,7 +17,7 @@ class ProgressButton extends StatefulWidget {
   ProgressButton(
       {Key? key,
       required this.buttonState,
-      required this.onPressed,
+      this.onPressed,
       this.child,
       this.backgroundColor,
       this.progressColor})
