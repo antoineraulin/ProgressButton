@@ -1,7 +1,7 @@
 name: material_progress_button
 description: A Material Flutter Button that indicates progress and error with animations
-version: 1.0.0
-authors: Antoine Raulin <antoine@araulin.eu> (Fork de Halil Ozercan <halilozercan@gmail.com>) 
+version: 1.1.0+1
+authors: Antoine Raulin <antoine@araulin.eu> (Fork from Halil Ozercan <halilozercan@gmail.com>) 
 homepage: https://github.com/halilozercan/progressbutton
 
 environment:
