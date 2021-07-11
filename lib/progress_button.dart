@@ -13,6 +13,7 @@ class ProgressButton extends StatefulWidget {
   final Widget? child;
   final Color? backgroundColor;
   final Color? progressColor;
+  final String? semanticLabel;
 
   ProgressButton(
       {Key? key,
@@ -20,7 +21,8 @@ class ProgressButton extends StatefulWidget {
       this.onPressed,
       this.child,
       this.backgroundColor,
-      this.progressColor})
+      this.progressColor,
+      this.semanticLabel})
       : super(key: key);
 
   @override
@@ -163,7 +165,11 @@ class _ProgressButtonState extends State<ProgressButton>
     return AnimatedBuilder(
       animation: _progressAnimationController,
       builder: (context, child) {
-        return InkWell(
+        return Semantics(
+          button: true,
+          enabled: widget.onPressed != null,
+          label: widget.semanticLabel,
+          child: InkWell(
             onTap: widget.onPressed,
             borderRadius: borderRadius,
             // this fixes the ripple effect
@@ -175,7 +181,9 @@ class _ProgressButtonState extends State<ProgressButton>
                     borderRadius: borderRadius, color: backgroundColor),
                 child: Center(child: buttonContent),
               ),
-            ));
+            ),
+          ),
+        );
       },
     );
   }
