@@ -36,11 +36,11 @@ class _ProgressButtonState extends State<ProgressButton>
   late AnimationController _errorAnimationController;
   late AnimationController _progressAnimationController;
   late Animation<Offset> _errorAnimation;
-  late Animation<BorderRadius> _borderAnimation;
+  late Animation<BorderRadius?> _borderAnimation;
   late Animation<double> _widthAnimation;
 
   double get buttonWidth => _widthAnimation.value;
-  BorderRadius get borderRadius => widget.buttonState == ButtonState.inProgress
+  BorderRadius? get borderRadius => widget.buttonState == ButtonState.inProgress
       ? _borderAnimation.value
       : BorderRadius.circular(5);
 
